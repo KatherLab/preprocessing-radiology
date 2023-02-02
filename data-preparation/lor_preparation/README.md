@@ -1,0 +1,2 @@
+Scripts for odelia approach. Later training will be using the column indicating if there is cancer on the left or right side. First, the scripts all bilateral tumors. You can find the relevant line of code here: https://github.com/mueller-franzes/odelia_breast_mri/blob/f52f055d75a36af81f8030b73c8a83e116ac2a92/odelia/data/datasets/dataset_3d_duke.py#L10
+It's using the "pre.nii.gz" (pre-contrast sequence) and first post-contrast ("post_1.nii.gz")
