@@ -50,13 +50,20 @@ class AddGaussianNoise(object):
 
 
 def _get_location(filename) -> Optional[np.ndarray]:
+    #print('11111111111111111')
     # this function will work for files created with med2images with format filename-slice00X.jpg
+    '''
     if matches := re.match(r'.*-slice(\d\d\d).jpg', str(filename)): 
         coords = matches.group(1)
         return coords
     else:
         print('Wrong filename', filename)
         return None
+    '''
+    coords = filename.stem.split('_')[-1]
+    #print(coords)
+    return coords
+
 
 
 def extract_features_(
@@ -122,7 +129,7 @@ def extract_features_(
     
         ds = ConcatDataset([unaugmented_ds, augmented_ds])
         dl = torch.utils.data.DataLoader(
-            ds, batch_size=64, shuffle=False, num_workers=os.cpu_count(), drop_last=False)
+            ds, batch_size=32, shuffle=False, num_workers=os.cpu_count(), drop_last=False)
 
         feats = []
         for batch in tqdm(dl, leave=False):
@@ -131,10 +138,15 @@ def extract_features_(
         with h5py.File(h5outpath, 'w') as f:
             try:    
                 f['location'] = [_get_location(fn) for fn in unaugmented_ds.tiles] + [_get_location(fn) for fn in augmented_ds.tiles]
+                #print('22222222222222')
+
                 f['feats'] = torch.concat(feats).cpu().numpy()
+                #print('========================')
+                #print(f['feats'].shape)
                 f['augmented'] = np.repeat(
                 [False, True], [len(unaugmented_ds), len(augmented_ds)])
                 f.attrs['extractor'] = extractor_string
+                print(f.attrs['extractor'])
             except:
                 print('Error with file naming, no location given')
             

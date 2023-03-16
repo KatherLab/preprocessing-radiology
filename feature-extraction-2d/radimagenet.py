@@ -9,7 +9,7 @@ __all__ = ['extract_resnet50_radimagenet_features_']
 
 def extract_resnet50_radimagenet_features_(*slide_tile_paths, **kwargs):
     model = torchvision.models.resnet50(pretrained=False)
-    model.load_state_dict(torch.load('marugoto/extract/RadImageNet-ResNet50_notop.pth'))
+    model.load_state_dict(torch.load('/home/swarm/PycharmProjects/preprocessing-radiology/feature-extraction-2d/RadImageNet-ResNet50_notop.pth'))
     model.fc = torch.nn.Identity()
     #device = 'cuda' if torch.cuda.is_available() else 'cpu'
     device_ids = get_free_gpu_indices()

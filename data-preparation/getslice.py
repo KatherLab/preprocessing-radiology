@@ -15,9 +15,9 @@ def getslice(df: pd.DataFrame,
     odir: Union[str, Path], imtype: str):    
     odir.mkdir(parents=True, exist_ok=True)
     imfile = Path(df[imtype])
-    maskfile = Path(df['MASK'])       
+    #maskfile = Path(df['MASK'])
     print('-----------------')
-    print('Processing image: ', maskfile)                              
+    #print('Processing image: ', maskfile)
     image = sitk.ReadImage(str(imfile))  
     im_arr = sitk.GetArrayFromImage(image)
     #get the slice with more pixels corresponding to the tumor
@@ -29,9 +29,9 @@ def getslice(df: pd.DataFrame,
 
    
 if __name__ == '__main__':
-    csv_path = Path(sys.argv[1])
-    odir = Path(sys.argv[2])
-    df = pd.read_csv(csv_path)
+    #csv_path = Path(sys.argv[1])
+    odir = Path(sys.argv[1])
+    #df = pd.read_csv(csv_path)
     imtype = sys.argv[3]
     import logging
     LOG = odir.parents[0]/'log_file_crop.txt'  # Here you can ount n the log name a 'log_{}'.format(params) with the params for this run    
