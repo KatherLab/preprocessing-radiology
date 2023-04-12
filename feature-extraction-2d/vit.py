@@ -19,7 +19,7 @@ def extract_vit_imagenet_features_(*slide_tile_paths, **kwargs):
             dataset with augmentation should be performed.  0 means that
             only one, non-augmentation iteration will be done.
     """
-    model = torchvision.models.vit_b_16(weights = 'IMAGENET1K_V1')
+    model = torchvision.models.vit_b_32(weights = 'IMAGENET1K_V1')
     model.heads = torch.nn.Identity()
     #device = 'cuda' if torch.cuda.is_available() else 'cpu'
     device_ids = get_free_gpu_indices()

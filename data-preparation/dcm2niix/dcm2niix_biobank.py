@@ -36,13 +36,13 @@ def main(cohort_path: Path, outdir: Path) -> None:
     logging.basicConfig(filename=outdir/'logfile', level=logging.DEBUG)
     logging.getLogger().addHandler(logging.StreamHandler())
     for patient_dir in (get_subdirs(cohort_path)):
-        for series in (get_subdirs(get_subdirs(patient_dir)[0])):
-            series_path_list.append(series)
+        #print(patient_dir)
+        series_path_list.append(patient_dir)
 
     pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
     for seires in tqdm(series_path_list):
         dcm2niix(outdir, seires)
-        pool.apply_async(dcm2niix, (outdir, seires))
+        pool.apply_async(dcm2niix_ori, (outdir, seires))
     '''
     pool = threadpool.ThreadPool(multiprocessing.cpu_count())
     requests = threadpool.makeRequests(dcm2niix(outdir, series), series_path_list)
@@ -52,6 +52,9 @@ def main(cohort_path: Path, outdir: Path) -> None:
 
 def dcm2niix(outpath: Path, dcm_path: Path) -> None:
     subprocess.run(["./bin/dcm2niix", "-ba", "y", "-i", "y", "-f", "%i%t%d_%s", "-w", "y", "-o", outpath, dcm_path])
+
+def dcm2niix_ori(outpath: Path, dcm_path: Path) -> None:
+    subprocess.run(["./bin/dcm2niix", "-z", "y", "-f", "%i%t%d_%s", "-o", outpath, dcm_path])
 
 def get_subdirs(path: Path) -> list:
     return [x for x in path.iterdir() if x.is_dir()]
@@ -64,7 +67,7 @@ def get_folder_with_specifc_naming(name: str, path: Path) -> bool:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Convert from dcm to niix.')
     parser.add_argument('-i', '--cohort_path', type=Path, metavar='', required=False,
-                        default='/mnt/sda1/ukbiobank/20204_extracted',
+                        default='/mnt/sda1/ukbiobank/1/',
                         help='Path to the input directory.')
     parser.add_argument('-o', '--outdir', type=Path, metavar='', required=False,
                         default='/mnt/sda1/ukbiobank/20204_niix',

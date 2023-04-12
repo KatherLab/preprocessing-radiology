@@ -19,14 +19,15 @@ def extract_resnet18_imagenet_features_(*slide_tile_paths, **kwargs):
             dataset with augmentation should be performed.  0 means that
             only one, non-augmentation iteration will be done.
     """
-    model = torchvision.models.resnet18(pretrained=True)
+    model = torchvision.models.resnet152(pretrained=True)
     model.fc = torch.nn.Identity()
-    #device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    device_ids = get_free_gpu_indices()
-    if len(device_ids)==0:
-        device = 'cpu'
-    else:
-        device='cuda:'+str(device_ids[0])
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    print(device)
+    #device_ids = get_free_gpu_indices()
+    #if len(device_ids)==0:
+        #device = 'cpu'
+    #else:
+        #device='cuda:'+str(device_ids[0])
 
     print(device)
     model = model.eval().to(device)
