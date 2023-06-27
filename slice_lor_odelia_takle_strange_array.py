@@ -35,17 +35,19 @@ def getslice(df: pd.DataFrame,
         (odir/imfile.parent.name).mkdir(parents=True, exist_ok=True)
         cv2.imwrite(str(odir/imfile.parent.name/final_filename),plane_z)
 
-odir = Path('/mnt/sda1/swarm-learning/radiology-dataset/odelia_slices_pre_post1')
-dir_path = Path('/mnt/sda1/swarm-learning/radiology-dataset/odelia_dataset_unilateral_256x256x32/')
+odir = Path('/mnt/sda1/Oliver/data_slices_sub_ex_black')
+dir_path = Path('/mnt/sda1/Oliver/data')
 # get all the files in the directory ends with .nii
 #recursivly get all the files in the directory
-post_1_files = [Path(f) for f in dir_path.glob('**/*') if f.is_file() and Path(f).name == 'post_1.nii.gz']
-pre_files = [Path(f) for f in dir_path.glob('**/*') if f.is_file() and Path(f).name == 'pre.nii.gz']
+#post_1_files = [Path(f) for f in dir_path.glob('**/*') if f.is_file() and Path(f).name == 'post_1.nii.gz']
+
+#pre_files = [Path(f) for f in dir_path.glob('**/*') if f.is_file() and Path(f).name == 'pre.nii.gz']
+sub_files = [Path(f) for f in dir_path.glob('**/*') if f.is_file() and Path(f).name == 'Sub.nii.gz']
 
 
 #print(post_1_files)
 #print(pre_files)
-files = post_1_files + pre_files
+files = sub_files
 #sub_files = [Path(f) for f in dir_path.glob('**/*') if f.is_file() and Path(f).name == 'sub.nii.gz']
 
 for imfile in (files):
@@ -59,6 +61,10 @@ for imfile in (files):
     # get the slice with more pixels corresponding to the tumor
     for n in range(int(np.shape(im_arr)[0])):
         plane_z = np.array(im_arr[n, :, :])
+        #print(plane_z)
+        # if there are only black pixels in the image, skip it
+        if np.sum(plane_z) == 0:
+            continue
         final_filename = imfile.stem.split('.')[0] + '_{}.jpg'.format(n)
         #print(odir / patient_id / final_filename)
 
